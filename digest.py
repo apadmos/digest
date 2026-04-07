@@ -43,7 +43,7 @@ class Digest(dict):
     def unwrap(self) -> dict:
         def unpack(value):
             if isinstance(value, Digest):
-                return value.to_raw_dict()
+                return value.unwrap()
             elif isinstance(value, dict):
                 return {k: unpack(v) for k, v in value.items()}
             elif isinstance(value, list):
