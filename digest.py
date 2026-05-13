@@ -23,7 +23,6 @@ class Digest(dict):
             return tuple(self._wrap(v) for v in value)
         return value
 
-
     def __getattr__(self, attr):
         if attr not in self:
             raise AttributeError("No attribute '{}' in digest".format(attr))
@@ -33,7 +32,6 @@ class Digest(dict):
         if allow_digest_wrap:
             value = self._wrap(value)
         self[key] = self._wrap(value)
-
 
     def __add__(self, other):
         for k, v in other.items():
@@ -55,14 +53,15 @@ class Digest(dict):
 
         return {k: unpack(v) for k, v in self.items()}
 
-
     @classmethod
-    def from_locals(cls, locals: dict, exclude: list[str] = None, ignore_falsies=True):
+    def from_locals(cls, locals: dict, exclude: list[str] = None,
+                    ignore_nones: bool = True,
+                    ignore_falsies: bool = True):
         exclude = set(exclude) if exclude else set()
         exclude.add("self")
         d = Digest()
         for k, v in locals.items():
-            if k in exclude or (ignore_falsies and not v):
+            if k in exclude or (ignore_falsies and not v) or (ignore_nones and v is None):
                 continue
             d[k] = v
         return d
