@@ -1,1 +1,1 @@
-from digest import Digest
+from .digest import Digest
